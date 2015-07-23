@@ -1,0 +1,82 @@
+Developing Data Products - Course Project
+========================================================
+author: devdataprod-030
+date: 7/17/15
+transition: rotate
+
+mpg Linear Regression Model - Objective
+========================================================
+
+Demonstrate a Linear Regression model over data collected by the 
+Motor Trend magazine with a focus on cylinders. This is a expansion
+of the Coursera Linear Regression Project.
+
+- Interactive Exploratory Analysis for the mean
+- Model Prediction comparing with Data Table
+- shiny was used to build API and R-Presentation for the
+support data product.
+
+
+Revised mpg Model
+========================================================
+
+<small>In the Linear Regression Project we demostrated the lack of relevancy 
+of transimission. In this project we are exploring number of cylinders as
+factor.</small>
+
+```{r, echo=FALSE}
+library(car)
+library(ggplot2)
+data(mtcars)
+mtcars$cyl <- factor(mtcars$cyl)
+mtcars$vs <- factor(mtcars$vs)
+mtcars$gear <- factor(mtcars$gear)
+mtcars$carb <- factor(mtcars$carb)
+mtcars$am <- factor(mtcars$am,labels=c('Auto','Manual'))
+```
+
+Revised Model : mtcars.lm <- lm(mpg ~ wt+hp+cyl, data = mtcars)
+
+```{r, echo=FALSE}
+mtcars.lm2 <- lm(mpg ~ wt+hp+cyl, data = mtcars)
+summary(mtcars.lm2)$coefficients
+```
+
+
+Potential Interaction by Cylinder [1]
+========================================================
+
+
+```{r, echo=FALSE}
+mtcars.c <- mtcars
+
+qplot(mpg, data=mtcars, geom="density", fill=cyl, alpha=I(.5),
+      main="Distribution of Gas Milage", xlab="Miles Per Gallon",
+      ylab="Density")
+
+```
+
+***
+- 3 distribution of mpg by cylinder
+- Shiny interaction should help illustrate
+
+Potential Interaction by Cylinder [2]
+========================================================
+```{r, echo=FALSE}
+mtcars.c <- mtcars
+fc <- mtcars.c$wt #wt
+v <- "wt" #wt
+tx <- paste("Regression of MPG on", v, sep=" ")
+
+  qplot(cyl, mpg, data=mtcars.c, geom=c("boxplot", "jitter"),
+      fill=cyl, main="Mileage by Cyl Number",
+      xlab="", ylab="Miles per Gallon")
+```
+
+<small>Further illustrates cylinder effect</small>
+
+***
+- Shiny Model will quantify effect on mpg
+- The proposed App visually portray the changes in cylinder
+- Will also model and allow user to compare with 
+a provided reference table.

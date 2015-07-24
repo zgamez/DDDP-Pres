@@ -1,0 +1,95 @@
+---
+title: "Expanded mpg Linear Regression Model - interactive Analysis in Shiny"
+output: html_document
+---
+
+
+```{r, echo=FALSE}
+# Exploratory Analysis 
+library(car)
+data(mtcars)
+mtcars$cyl <- factor(mtcars$cyl)
+mtcars$vs <- factor(mtcars$vs)
+mtcars$gear <- factor(mtcars$gear)
+mtcars$carb <- factor(mtcars$carb)
+mtcars$am <- factor(mtcars$am,labels=c('Auto','Manual'))
+require(graphics)
+```
+
+
+*EXECUTIVE SUMMARY*
+
+We presented an mpg Linear Model project in support of the Coursera 'Linear Regression' class and in this project we will expand by enabling interactive data exploration and creating a model based on the conclusions of our previous study.
+
+We will again rely on the 'mtcars' dataset to demonstrate a Linear Regression model over data collected by the Motor Trend magazine, we are interested in exploring the relationship between a set of variables and miles per gallon (MPG) (outcome) and the interactions on number of cylinder on an 
+specific model.
+
+*DELIVERABLES*
+
+Create a Shiny application and deploy it on Rstudio's servers. Second, you will use Slidify or Rstudio Presenter to prepare a reproducible pitch presentation about your application.
+
+*LINEAR MODEL*
+
+Consider the following conclusions from our baseline project :
+
+  I. "Is an automatic or manual transmission better for MPG" -> We think that whilst the exploratory analysis shows different distributions for Auto/Manual relative to mpg/weight and manual proved to be only slightly better than automatic transmission.
+
+  II. We think we can leave 'am' out of the model and opt for a simpler version.
+  
+*Proposed Model*
+
+We are proposing the following simplyfied model considering only weight, horsepowe and number of cylinders :
+
+mpg.p <- 35.84 - 3.18140*i.wt - 0.02312*i.hp - 3.35902*i.cyl6 - 3.18588*i.cyl8
+
+**Coefficients Interpretation**
+
+Revised Model : mtcars.lm <- lm(mpg ~ wt+hp+cyl, data = mtcars)
+
+```{r, echo=FALSE}
+mtcars.lm2 <- lm(mpg ~ wt+hp+cyl, data = mtcars)
+summary(mtcars.lm2)
+```
+
+All factors held constant we have a baseline mpg performance of 35.8 (intercept) and every ton would bring down by 3.18mpg, while changes on horsepower would have and effect of only 0.02 mpg. Model base considers a 4cyl car so then a 6 cal factore in would bring down mpg by 3.35 mpg and 8 cyl would reduce by 3.18.
+
+*MODEL DIAGNOSTICS / INFERENCE*
+
+Considering adjusted R-sqrt as we are dealing with a multiple logistics regression we observe that 84% of mgp variability is explained by the regressors included in the proposed model. This also implies that a linear relationship exist among the variables. 
+
+**->** The residuals of the model are nearly normal. Normal Q-Q below exhibits some minor irregularities (Corolla, F128, Imperial) as potential outliers and that might be cause for concern, however, Upper left hand points have low leverage, low influence (per 02_04 lecture slide 5/16).
+
+**->** The variability of the residuals is nearly constant. The variability of the data around the line increases with larger values of x so we have some concerns as shown in Res vs Fitted and Scale-Location. However utilizing Breusch-Pagan (aka Cook-Weisberg) test for heteroskedasticity it results in a p value around 0.05 so we will proceed assuming constant variability. 
+
+Breusch-Pagan test for heteroskedasticity
+```{r}
+ncvTest(mtcars.lm2)
+```
+Chi-square value was large and the p-value is small, indicating heteroskedasticity was present.
+
+**->** The scale-location plot in the lower left shows the square root of the standardized residuals as a function of the fitted values. There shouldn't be obvious trends in this plot and don't observe any.
+
+**->** The plot in the lower left shows each points leverage. We do not see large distances that can be suspicious and suggest the presence of a possible outlier or a poor model.
+
+Model Diagnostics Plots 
+```{r echo=FALSE}
+par(mfrow=c(2,2))
+plot(mtcars.lm2)
+```
+
+*EXPLORATORY ANALYSIS*
+
+mtcars dataset accounts for 32 observations and 11 variables as numeric. We have converted cyl as factor.
+
+In the case of 'am' the graphs and boxplot in the exploratory analysis suggest high dispersion and significant differences in means but also a possible interaction between the 'wt' and 'hp' and number of cylinders.
+
+*CONCLUSIONS*
+
+While our initial look at the data showed differences between the number of cylinders relative to mpg and and interaction with weight an horsepower. The model reveals that number of cylinder may not be much of a factor. Considering the adj R sqrt the model seems promising as we validated the fundamental assumptions in the 'model diagnostics' section.
+
+  I. We found value on the interaction offered by the exploratory solution in Shiny.
+
+  II. Constrasting the model prediction vs the actual data table also offers good insight as to the effectiviness of the model in perspective of our findings of the model diagnostics.
+
+We reflect on the value of a data product as the augmented insight that can be gained beyond of static visualization and also appreciatte the feedback of the solution. Whilst we are not expert creating Shiny solutions as of yet, we found it very practical and also value the possibility to better communicate project intent and outcomes.
+

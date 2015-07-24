@@ -7,10 +7,12 @@ PLS SEE --- >>> DDPReport.Rmd
 Content :
 
 - Shiny app : https://zgamez.shinyapps.io/app-DDPProject
+
   Supporting Files :
     app.R 
 
 - Slides :  zgamez.github.io/DDDP-Pres/DDPProject.html#/
+
   Supporting Files :
      DDPProject.Rpres 	
 	   DDPProject.html 	 
@@ -18,6 +20,6 @@ Content :
 
 - Report : 
      DDPReport.Rmd 	 
-	   DDPReport.html
+     DDPReport.html
 
 
